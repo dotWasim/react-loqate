@@ -19,6 +19,7 @@ export interface Props {
   countries?: string[];
   limit?: number;
   onSelect: (address: Address) => void;
+  onManual: () => void;
   components?: Components;
   className?: string;
   classes?: {
@@ -115,6 +116,7 @@ function AddressSearch(props: Props): JSX.Element {
     locale,
     countries,
     onSelect,
+    onManual,
     limit,
     apiKey,
     className,
@@ -212,6 +214,23 @@ function AddressSearch(props: Props): JSX.Element {
             className={classes?.list}
             data-testid="react-loqate-list"
           >
+            <ListItem
+              key="manual"
+              onClick={onManual}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onManual();
+                }
+                if (e.key === 'Escape') {
+                  setSuggestions([]);
+                }
+              }}
+              className={classes?.listItem}
+              data-testid={'react-loqate-list-item-manual'}
+              value={value}
+            >
+              Enter address manually
+            </ListItem>
             {suggestions.map((suggestion, i) => (
               <ListItem
                 key={suggestion.Id + i}
