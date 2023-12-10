@@ -110,7 +110,11 @@ export interface Item {
   Highlight: string;
 }
 
-function AddressSearch(props: Props): JSX.Element {
+function AddressSearch(
+  props: Props & { onManualEntrySelected?: () => void }
+): JSX.Element {
+  const { onManualEntrySelected } = props; // Destructure the new prop
+
   const {
     locale,
     countries,
@@ -232,6 +236,21 @@ function AddressSearch(props: Props): JSX.Element {
                 {suggestion.Text} {suggestion.Description}
               </ListItem>
             ))}
+            {value && (
+              <ListItem
+                key="manual-entry"
+                onClick={onManualEntrySelected}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    onManualEntrySelected?.();
+                  }
+                }}
+                className={classes?.listItem}
+                data-testid="react-loqate-manual-entry"
+              >
+                Enter Address Manually
+              </ListItem>
+            )}
           </List>
         </ClickAwayListener>
       </Portal>
