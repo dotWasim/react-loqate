@@ -239,7 +239,12 @@ function AddressSearch(props: Props): JSX.Element {
             ))}
             {value && (
               <ManualEntryListItem
-                onClick={onManualEntrySelected}
+                onClick={() => {
+                  setSuggestions([]);
+                  if (onManualEntrySelected) {
+                    onManualEntrySelected();
+                  }
+                }}
                 text={manualEntryText}
               />
             )}
