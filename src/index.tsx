@@ -12,6 +12,7 @@ import DefaultList from './components/DefaultList';
 import DefaultListItem from './components/DefaultListItem';
 import Loqate from './utils/Loqate';
 import useDebounceEffect from './utils/useDebounceEffect';
+import ManualEntryListItem from './components/ManualEntryListItem';
 
 export interface Props {
   locale: string;
@@ -19,6 +20,8 @@ export interface Props {
   countries?: string[];
   limit?: number;
   onSelect: (address: Address) => void;
+  onManualEntrySelected?: () => void;
+  manualEntryText?: string;
   components?: Components;
   className?: string;
   classes?: {
@@ -110,15 +113,13 @@ export interface Item {
   Highlight: string;
 }
 
-function AddressSearch(
-  props: Props & { onManualEntrySelected?: () => void }
-): JSX.Element {
-  const { onManualEntrySelected } = props; // Destructure the new prop
-
+function AddressSearch(props: Props): JSX.Element {
   const {
     locale,
     countries,
     onSelect,
+    onManualEntrySelected,
+    manualEntryText = 'Enter Address Manually',
     limit,
     apiKey,
     className,
@@ -237,19 +238,10 @@ function AddressSearch(
               </ListItem>
             ))}
             {value && (
-              <ListItem
-                key="manual-entry"
+              <ManualEntryListItem
                 onClick={onManualEntrySelected}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    onManualEntrySelected?.();
-                  }
-                }}
-                className={classes?.listItem}
-                data-testid="react-loqate-manual-entry"
-              >
-                Enter Address Manually
-              </ListItem>
+                text={manualEntryText}
+              />
             )}
           </List>
         </ClickAwayListener>
