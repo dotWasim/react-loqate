@@ -11,7 +11,7 @@ const ManualEntryListItem: React.FC<ManualEntryListItemProps> = ({
 }) => {
   return (
     <li
-      style="background-color: lightgray;"
+      style={{ backgroundColor: 'lightgray' }}
       className="react-loqate-list-item"
       onClick={onClick}
     >
