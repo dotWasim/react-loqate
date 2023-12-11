@@ -224,7 +224,9 @@ function AddressSearch(props: Props): JSX.Element {
               left: rect?.left ?? 0,
               width: rect?.width ?? undefined,
             }}
-            hidden={!isInputFocused && !suggestions.length}
+            hidden={
+              !isInputFocused && value.trim() === '' && !suggestions.length
+            }
             className={classes?.list}
             data-testid="react-loqate-list"
           >
@@ -248,18 +250,17 @@ function AddressSearch(props: Props): JSX.Element {
                 {suggestion.Text} {suggestion.Description}
               </ListItem>
             ))}
-            {value &&
-              (suggestions.length === 0 || (
-                <ManualEntryListItem
-                  onClick={() => {
-                    setSuggestions([]);
-                    if (onManualEntrySelected) {
-                      onManualEntrySelected();
-                    }
-                  }}
-                  text={manualEntryText}
-                />
-              ))}
+            {value && value.trim() !== '' && isInputFocused && (
+              <ManualEntryListItem
+                onClick={() => {
+                  setSuggestions([]);
+                  if (onManualEntrySelected) {
+                    onManualEntrySelected();
+                  }
+                }}
+                text={manualEntryText}
+              />
+            )}
           </List>
         </ClickAwayListener>
       </Portal>
