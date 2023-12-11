@@ -133,6 +133,7 @@ function AddressSearch(props: Props): JSX.Element {
 
   const [suggestions, setSuggestions] = useState<Item[]>([]);
   const [value, setValue] = useState('');
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   const anchorRef = useRef<HTMLDivElement>(null);
   const rect = anchorRef.current?.getBoundingClientRect();
@@ -186,6 +187,14 @@ function AddressSearch(props: Props): JSX.Element {
     [value]
   );
 
+  const handleInputFocus = () => {
+    setIsInputFocused(true);
+  };
+
+  const handleInputBlur = () => {
+    setIsInputFocused(false);
+  };
+
   const Input = components?.Input ?? DefaultInput;
   const List = components?.List ?? DefaultList;
   const ListItem = components?.ListItem ?? DefaultListItem;
@@ -195,6 +204,8 @@ function AddressSearch(props: Props): JSX.Element {
       <Input
         className={clsx(classes?.input)}
         onChange={handleChange}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
         value={value}
         data-testid="react-loqate-input"
         onKeyDown={(e) => {
@@ -213,7 +224,7 @@ function AddressSearch(props: Props): JSX.Element {
               left: rect?.left ?? 0,
               width: rect?.width ?? undefined,
             }}
-            hidden={!suggestions.length}
+            hidden={!isInputFocused && !suggestions.length}
             className={classes?.list}
             data-testid="react-loqate-list"
           >
@@ -237,18 +248,18 @@ function AddressSearch(props: Props): JSX.Element {
                 {suggestion.Text} {suggestion.Description}
               </ListItem>
             ))}
-            {value && (
-              <ManualEntryListItem
-                onClick={() => {
-                  setSuggestions([]);
-                  if (onManualEntrySelected) {
-                    onManualEntrySelected();
-                  }
-                  return;
-                }}
-                text={manualEntryText}
-              />
-            )}
+            {value &&
+              (suggestions.length === 0 || (
+                <ManualEntryListItem
+                  onClick={() => {
+                    setSuggestions([]);
+                    if (onManualEntrySelected) {
+                      onManualEntrySelected();
+                    }
+                  }}
+                  text={manualEntryText}
+                />
+              ))}
           </List>
         </ClickAwayListener>
       </Portal>
